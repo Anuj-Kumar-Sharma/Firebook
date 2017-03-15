@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "997216257732",
+    "firebase_url": "https://firebook-65bdd.firebaseio.com",
+    "project_id": "firebook-65bdd",
+    "storage_bucket": "firebook-65bdd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997216257732:android:c5ff430a6a5ca65b",
+        "android_client_info": {
+          "package_name": "com.example.anujsharma.firebook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "997216257732-i2kqeuodn7ivjoui20vljstmbggi5ulv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.anujsharma.firebook",
+            "certificate_hash": "71a75327eeccc4a5b9131fc8e041c72f5ea44836"
+          }
+        },
+        {
+          "client_id": "997216257732-hs7j7chn835gv2mn3kao83rb06gjl87b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIQXIWb22j7HZhdM5gRCFhCP_He-4WIJ0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "997216257732-hs7j7chn835gv2mn3kao83rb06gjl87b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
