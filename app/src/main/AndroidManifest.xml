@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".Firebook"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -27,7 +28,8 @@
             android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".PostActivity" />
         <activity android:name=".LogInActivity" />
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".UserProfileActivity"></activity>
     </application>
 
 </manifest>

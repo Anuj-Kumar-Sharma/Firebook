@@ -71,7 +71,7 @@ public class LogInActivity extends AppCompatActivity {
 
         if (!email.isEmpty() && !password.isEmpty()) {
 
-            mProgressDialog.setMessage("Logging In");
+            mProgressDialog.setMessage("Logging In...");
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.show();
 
@@ -87,10 +87,7 @@ public class LogInActivity extends AppCompatActivity {
                     mProgressDialog.dismiss();
                 }
             });
-
-
         }
-
     }
 
     private void checkUserExists() {
@@ -105,6 +102,7 @@ public class LogInActivity extends AppCompatActivity {
                     Intent intent = new Intent(LogInActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(LogInActivity.this, "something went wrong", Toast.LENGTH_SHORT).show();
                 }

@@ -56,7 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (!name.isEmpty() && !email.isEmpty() && !pass.isEmpty()) {
 
-            mProgressDialog.setMessage("Signing Up");
+            mProgressDialog.setMessage("Signing Up...");
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.show();
 
@@ -73,6 +73,7 @@ public class SignUpActivity extends AppCompatActivity {
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                    finish();
                 }
             });
         }

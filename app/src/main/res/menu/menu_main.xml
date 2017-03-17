@@ -10,8 +10,14 @@
 
     <item
         android:id="@+id/action_logout"
-        android:orderInCategory="101"
+        android:orderInCategory="103"
         android:title="Log Out"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_view_profile"
+        android:orderInCategory="102"
+        android:title="My Profile"
         app:showAsAction="never" />
 
     <item

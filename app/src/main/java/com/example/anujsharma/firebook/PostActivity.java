@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,12 +34,10 @@ public class PostActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
     private ProgressDialog mProgressDialog;
 
-    private String TAG = "tag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate Post");
         setContentView(R.layout.activity_post);
 
         ibImage = (ImageButton) findViewById(R.id.xibImage);
@@ -72,7 +69,7 @@ public class PostActivity extends AppCompatActivity {
 
         final String title = etTitle.getText().toString().trim();
         final String desc = etDesc.getText().toString().trim();
-        mProgressDialog.setTitle("Posting");
+        mProgressDialog.setTitle("Posting...");
         mProgressDialog.setCanceledOnTouchOutside(false);
 
         if(!title.isEmpty() && !desc.isEmpty() && resultUri!=null) {
@@ -92,7 +89,10 @@ public class PostActivity extends AppCompatActivity {
 
                     mProgressDialog.dismiss();
 
-                    startActivity(new Intent(PostActivity.this, MainActivity.class));
+                    Intent intent = new Intent(PostActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

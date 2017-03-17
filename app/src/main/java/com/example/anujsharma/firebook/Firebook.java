@@ -5,10 +5,6 @@ import android.app.Application;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
 
-/**
- * Created by ANUJ SHARMA on 3/17/2017.
- */
-
 public class Firebook extends Application {
 
     @Override
