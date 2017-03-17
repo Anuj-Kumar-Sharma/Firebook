@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -24,6 +25,7 @@ public class LogInActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private Button bnLogIn, bnNewAccount;
+    private SignInButton bnGoogleSignIn;
 
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabaseRef;
@@ -37,11 +39,13 @@ public class LogInActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabaseRef.keepSynced(true);
 
         etEmail = (EditText) findViewById(R.id.xetLogInEmail);
         etPassword = (EditText) findViewById(R.id.xetLogInPassword);
         bnLogIn = (Button) findViewById(R.id.xbnLogIn);
         bnNewAccount = (Button) findViewById(R.id.xbnLogInNewAccount);
+        bnGoogleSignIn = (SignInButton) findViewById(R.id.xbnGoogleSignIn);
         mProgressDialog = new ProgressDialog(this);
 
         bnLogIn.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +72,7 @@ public class LogInActivity extends AppCompatActivity {
         if (!email.isEmpty() && !password.isEmpty()) {
 
             mProgressDialog.setMessage("Logging In");
+            mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.show();
 
             mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {

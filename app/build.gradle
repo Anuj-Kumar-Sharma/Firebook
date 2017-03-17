@@ -32,6 +32,8 @@ dependencies {
     compile 'com.google.firebase:firebase-database:10.2.0'
     compile 'com.google.firebase:firebase-crash:10.2.0'
     compile 'com.google.firebase:firebase-auth:10.2.0'
+    compile 'com.google.android.gms:play-services-auth:10.2.0'
+    compile 'com.google.android.gms:play-services:10.2.0'
     compile 'com.google.firebase:firebase-storage:10.2.0'
     compile 'com.firebaseui:firebase-ui-database:1.2.0'
     compile 'com.theartofdev.edmodo:android-image-cropper:2.3.+'

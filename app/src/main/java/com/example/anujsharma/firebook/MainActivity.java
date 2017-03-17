@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,12 +30,17 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rvMainRecyclerView;
 
     private DatabaseReference mDatabaseRef;
+    private DatabaseReference mDatabaseUsersRef;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+
+    private String TAG = "tag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate Main");
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("feeds");
+        mDatabaseUsersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabaseUsersRef.keepSynced(true);
+
+        rvMainRecyclerView = (RecyclerView) findViewById(R.id.xrvMainRecyclerView);
+        rvMainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         mAuth = FirebaseAuth.getInstance();
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -60,18 +73,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("feeds");
-        rvMainRecyclerView = (RecyclerView) findViewById(R.id.xrvMainRecyclerView);
-        rvMainRecyclerView.setHasFixedSize(true);
-        rvMainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        mAuth.addAuthStateListener(mAuthStateListener);
+        Log.d(TAG, "onStart Main");
 
         FirebaseRecyclerAdapter<Feed, FeedsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Feed, FeedsViewHolder>(
 
@@ -90,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
         };
 
         rvMainRecyclerView.setAdapter(firebaseRecyclerAdapter);
+
+        mAuth.addAuthStateListener(mAuthStateListener);
     }
 
     @Override

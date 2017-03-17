@@ -3,19 +3,18 @@ package com.example.anujsharma.firebook;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -27,18 +26,21 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 public class PostActivity extends AppCompatActivity {
 
+    private static final int PICK_IMAGE = 2;
     ImageButton ibImage;
     Button bnPost;
     EditText etTitle, etDesc;
-    private static final int PICK_IMAGE=2;
     Uri resultUri;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private ProgressDialog mProgressDialog;
 
+    private String TAG = "tag";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate Post");
         setContentView(R.layout.activity_post);
 
         ibImage = (ImageButton) findViewById(R.id.xibImage);
@@ -71,6 +73,7 @@ public class PostActivity extends AppCompatActivity {
         final String title = etTitle.getText().toString().trim();
         final String desc = etDesc.getText().toString().trim();
         mProgressDialog.setTitle("Posting");
+        mProgressDialog.setCanceledOnTouchOutside(false);
 
         if(!title.isEmpty() && !desc.isEmpty() && resultUri!=null) {
             mProgressDialog.show();

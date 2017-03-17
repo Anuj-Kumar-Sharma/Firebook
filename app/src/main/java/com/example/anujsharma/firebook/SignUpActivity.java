@@ -57,6 +57,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (!name.isEmpty() && !email.isEmpty() && !pass.isEmpty()) {
 
             mProgressDialog.setMessage("Signing Up");
+            mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.show();
 
             mFirebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
