@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -22,6 +24,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.util.Calendar;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -33,6 +37,8 @@ public class PostActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private ProgressDialog mProgressDialog;
+    private FirebaseUser mUser;
+    private FirebaseAuth mAuth;
 
 
     @Override
@@ -45,6 +51,8 @@ public class PostActivity extends AppCompatActivity {
         etTitle = (EditText) findViewById(R.id.xetTitle);
         etDesc = (EditText) findViewById(R.id.xetDesc);
         mStorageRef = FirebaseStorage.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("feeds");
         mProgressDialog = new ProgressDialog(this);
 
@@ -74,7 +82,7 @@ public class PostActivity extends AppCompatActivity {
 
         if(!title.isEmpty() && !desc.isEmpty() && resultUri!=null) {
             mProgressDialog.show();
-            StorageReference imageRef = mStorageRef.child("firebook_images").child(resultUri.getLastPathSegment());
+            StorageReference imageRef = mStorageRef.child("firebook_feeeds").child(resultUri.getLastPathSegment());
             imageRef.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -85,6 +93,11 @@ public class PostActivity extends AppCompatActivity {
                     DatabaseReference mchildRef = mDatabaseRef.push();
                     mchildRef.child("title").setValue(title);
                     mchildRef.child("desc").setValue(desc);
+                    mchildRef.child("u_id").setValue(mUser.getUid());
+                    Calendar c = Calendar.getInstance();
+                    String date = c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
+                    mchildRef.child("date").setValue(date);
+
                     mchildRef.child("image").setValue(downloadUrl.toString());
 
                     mProgressDialog.dismiss();

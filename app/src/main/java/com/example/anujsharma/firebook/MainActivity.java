@@ -19,8 +19,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import dataStructures.Feed;
 
@@ -60,9 +63,10 @@ public class MainActivity extends AppCompatActivity {
         rvMainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mAuth = FirebaseAuth.getInstance();
+
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
 
                 if (firebaseAuth.getCurrentUser() == null) {
                     Intent intent = new Intent(MainActivity.this, LogInActivity.class);
@@ -85,11 +89,32 @@ public class MainActivity extends AppCompatActivity {
                 mDatabaseRef
         ) {
             @Override
-            protected void populateViewHolder(FeedsViewHolder viewHolder, Feed model, int position) {
+            protected void populateViewHolder(final FeedsViewHolder viewHolder, Feed model, int position) {
+
+                String feedU_id = model.getU_id();
+                DatabaseReference dbUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(feedU_id);
+                dbUserRef.keepSynced(true);
+                dbUserRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        String userName = dataSnapshot.child("name").getValue(String.class);
+                        String userProfileImage = dataSnapshot.child("profile_image").getValue(String.class);
+
+                        viewHolder.setUserName(userName);
+                        viewHolder.setUserImage(MainActivity.this, userProfileImage);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setDesc(model.getDesc());
-                viewHolder.setImage(MainActivity.this, model.getImage());
+                viewHolder.setDate(model.getDate());
+                viewHolder.setImage(getApplicationContext(), model.getImage());
             }
         };
 
@@ -160,6 +185,21 @@ public class MainActivity extends AppCompatActivity {
         public void setImage(Context context, String image) {
             ImageView ivImage = (ImageView) mView.findViewById(R.id.xivImage);
             Glide.with(context).load(image).into(ivImage);
+        }
+
+        public void setUserImage(Context context, String userImage) {
+            ImageView ivUserImage = (ImageView) mView.findViewById(R.id.xivUserImageInFeeds);
+            Glide.with(context).load(userImage).into(ivUserImage);
+        }
+
+        public void setUserName(String userProfileName) {
+            TextView tvUserProfileName = (TextView) mView.findViewById(R.id.xtvUserNameInFeeds);
+            tvUserProfileName.setText(userProfileName);
+        }
+
+        public void setDate(String date) {
+            TextView tvDate = (TextView) mView.findViewById(R.id.xtvDate);
+            tvDate.setText(date);
         }
     }
 }

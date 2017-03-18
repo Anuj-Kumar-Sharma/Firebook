@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.SignInButton;
@@ -23,8 +24,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LogInActivity extends AppCompatActivity {
 
+    private TextView bnNewAccount;
     private EditText etEmail, etPassword;
-    private Button bnLogIn, bnNewAccount;
+    private Button bnLogIn;
     private SignInButton bnGoogleSignIn;
 
     private FirebaseAuth mFirebaseAuth;
@@ -44,7 +46,7 @@ public class LogInActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.xetLogInEmail);
         etPassword = (EditText) findViewById(R.id.xetLogInPassword);
         bnLogIn = (Button) findViewById(R.id.xbnLogIn);
-        bnNewAccount = (Button) findViewById(R.id.xbnLogInNewAccount);
+        bnNewAccount = (TextView) findViewById(R.id.xbnLogInNewAccount);
         bnGoogleSignIn = (SignInButton) findViewById(R.id.xbnGoogleSignIn);
         mProgressDialog = new ProgressDialog(this);
 
@@ -104,7 +106,7 @@ public class LogInActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(LogInActivity.this, "something went wrong", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LogInActivity.this, "You need to create a new account.", Toast.LENGTH_SHORT).show();
                 }
             }
 

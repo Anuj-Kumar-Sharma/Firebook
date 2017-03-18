@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="com.example.anujsharma.firebook.SignUpActivity">
 
 
@@ -10,38 +11,75 @@
         android:id="@+id/xetSignUpName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/xetSignUpEmail"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/tv_style"
         android:ems="10"
         android:hint="Name"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:padding="15dp"
+        android:textColorHint="@color/common_google_signin_btn_text_light_focused" />
 
     <EditText
         android:id="@+id/xetSignUpEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/xetSignUpPassword"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/xetSignUpName"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/tv_style"
         android:ems="10"
         android:hint="Email"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:padding="15dp"
+        android:textColorHint="@color/common_google_signin_btn_text_light_focused" />
 
     <EditText
         android:id="@+id/xetSignUpPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/xetSignUpEmail"
-        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/xbnSignUp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/tv_style"
         android:ems="10"
         android:hint="Password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:padding="15dp"
+        android:textColorHint="@color/common_google_signin_btn_text_light_focused" />
 
     <Button
         android:id="@+id/xbnSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/login_btn_style"
+        android:text="Continue Sign Up"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/xetSignUpPassword"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Continue Sign Up" />
+        android:layout_marginTop="76dp"
+        android:text="Create Account"
+        android:textSize="30sp" />
 </RelativeLayout>

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="com.example.anujsharma.firebook.LogInActivity">
 
 
@@ -10,44 +12,80 @@
         android:id="@+id/xetLogInEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/xetLogInPassword"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/tv_style"
         android:ems="10"
         android:hint="Email"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:padding="15dp"
+        android:textColorHint="@color/common_google_signin_btn_text_light_focused" />
 
     <EditText
         android:id="@+id/xetLogInPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/xetLogInEmail"
-        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/xbnLogIn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/tv_style"
         android:ems="10"
         android:hint="Password"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:padding="15dp"
+        android:textColorHint="@color/common_google_signin_btn_text_light_focused" />
 
     <Button
         android:id="@+id/xbnLogIn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/xetLogInPassword"
+        android:layout_above="@+id/xbnGoogleSignIn"
         android:layout_centerHorizontal="true"
-        android:text="Log In" />
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/login_btn_style"
+        android:text="Sign in"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/xbnGoogleSignIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/xbnLogInNewAccount"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/xbnLogIn"></com.google.android.gms.common.SignInButton>
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"></com.google.android.gms.common.SignInButton>
 
-    <Button
+    <TextView
         android:id="@+id/xbnLogInNewAccount"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:text="Need a new Account?" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Need a new Account?"
+        android:textAllCaps="false"
+        android:textColor="@color/common_google_signin_btn_text_light_default"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        app:srcCompat="@drawable/fire_image_red" />
 </RelativeLayout>
