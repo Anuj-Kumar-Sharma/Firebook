@@ -29,7 +29,8 @@
         <activity android:name=".PostActivity" />
         <activity android:name=".LogInActivity" />
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".UserProfileActivity"></activity>
+        <activity android:name=".UserProfileActivity" />
+        <activity android:name=".AnotherUserProfileActivity"></activity>
     </application>
 
 </manifest>

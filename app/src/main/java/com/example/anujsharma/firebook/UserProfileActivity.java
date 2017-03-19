@@ -31,9 +31,11 @@ public class UserProfileActivity extends AppCompatActivity {
     private static final int PICK_IMAGE = 2;
     Uri resultUri;
     private ImageButton ibUserImage;
-    private TextView tvUserName;
+    private TextView tvUserName, tvUserEmail;
     private Button bnPostUserProfile;
     private ProgressDialog mProgressDialog;
+
+
     private DatabaseReference mDatabaseRef;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser firebaseUser;
@@ -44,8 +46,12 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        Intent intent = getIntent();
+        String feed_uid = intent.getStringExtra("feed_uid");
+
         ibUserImage = (ImageButton) findViewById(R.id.xibUserImage);
         tvUserName = (TextView) findViewById(R.id.xtvUserProfileName);
+        tvUserEmail = (TextView) findViewById(R.id.xtvUserEmail);
         bnPostUserProfile = (Button) findViewById(R.id.xbnPostUserProfile);
         mProgressDialog = new ProgressDialog(this);
 
@@ -92,16 +98,25 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String name = dataSnapshot.child("name").getValue(String.class);
+                String email = dataSnapshot.child("email").getValue(String.class);
                 String imageUrl = dataSnapshot.child("profile_image").getValue(String.class);
+
                 tvUserName.setText(name);
+                tvUserEmail.setText(email);
                 if (imageUrl != null) {
-                    Glide.with(UserProfileActivity.this).load(imageUrl).into(ibUserImage);
+                    Glide.with(UserProfileActivity.this)
+                            .load(imageUrl)
+                            .asBitmap()
+                            .centerCrop()
+                            .into(ibUserImage);
+
                 } else {
                     Glide.with(UserProfileActivity.this).load(R.mipmap.empty_user).into(ibUserImage);
                 }
             }
 
             @Override
+
             public void onCancelled(DatabaseError databaseError) {
 
             }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_image_proile"
+        android:title="Profile" />
+
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_image_settings"
+        android:title="Settings" />
+
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_image_logout"
+        android:title="Log out" />
+</menu>

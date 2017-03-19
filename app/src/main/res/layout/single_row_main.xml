@@ -36,8 +36,8 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="Name"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/wallet_link_text_light"
+                    android:textSize="14sp" />
 
 
                 <TextView
@@ -66,8 +66,8 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:text="Title goes here"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/xtvDesc"
@@ -76,7 +76,8 @@
             android:paddingBottom="10dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="Description goes here" />
+            android:text="Description goes here"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

@@ -2,4 +2,6 @@
     <string name="app_name">Firebook</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_user_profile">UserProfileActivity</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 </resources>
