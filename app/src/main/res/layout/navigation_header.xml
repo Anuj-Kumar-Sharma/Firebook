@@ -4,7 +4,7 @@
     android:layout_height="160dp"
     android:background="@drawable/backgroun_image"
     android:backgroundTint="@android:drawable/screen_background_dark_transparent"
-    android:backgroundTintMode="src_over"
+    android:backgroundTintMode="src_atop"
     android:paddingLeft="30dp"
     android:paddingRight="30dp"
     android:paddingTop="30dp">
@@ -36,7 +36,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/xtvUserNameInNavigation"
         android:text="abc@gmail.com"
-        android:textColor="@color/wallet_bright_foreground_holo_dark" />
+        android:textColor="?attr/colorBackgroundFloating" />
 
 
 </RelativeLayout>

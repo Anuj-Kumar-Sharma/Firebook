@@ -1,14 +1,15 @@
 package com.example.anujsharma.firebook;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
+    //private Query mSearchQuery;
+
+    private String TAG = "Holla";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(new Intent(MainActivity.this, PostActivity.class));
             }
         });
+
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.mainDrawerLayout);
         navigationView = (NavigationView) findViewById(R.id.mainNavigationView);
@@ -82,7 +86,10 @@ public class MainActivity extends AppCompatActivity {
         mDatabaseUsersRef.keepSynced(true);
 
         rvMainRecyclerView = (RecyclerView) findViewById(R.id.xrvMainRecyclerView);
-        rvMainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        rvMainRecyclerView.setLayoutManager(layoutManager);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -103,16 +110,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 FirebaseUser currentUser = mAuth.getCurrentUser();
-                String name = dataSnapshot.child(currentUser.getUid()).child("name").getValue(String.class);
-                String email = dataSnapshot.child(currentUser.getUid()).child("email").getValue(String.class);
-                String user_image = dataSnapshot.child(currentUser.getUid()).child("profile_image").getValue(String.class);
+                if (currentUser != null) {
+                    String name = dataSnapshot.child(currentUser.getUid()).child("name").getValue(String.class);
+                    String email = dataSnapshot.child(currentUser.getUid()).child("email").getValue(String.class);
+                    String user_image = dataSnapshot.child(currentUser.getUid()).child("profile_image").getValue(String.class);
 
-                navigationUserName.setText(name);
-                navigationUserEmail.setText(email);
-                Glide.with(getApplicationContext())
-                        .load(user_image)
-                        .dontAnimate()
-                        .into(navigationUserImage);
+                    navigationUserName.setText(name);
+                    navigationUserEmail.setText(email);
+                    Glide.with(getApplicationContext())
+                            .load(user_image)
+                            .dontAnimate()
+                            .into(navigationUserImage);
+                }
             }
 
             @Override
@@ -133,15 +142,69 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "settings", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.nav_logout:
-                        mAuth.signOut();
-                        Intent intent = new Intent(MainActivity.this, LogInActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
+
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setMessage("Log Out");
+                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAuth.signOut();
+                                Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+
                 }
                 return true;
             }
         });
+
+       /* ///---------- checking firebase query
+
+        mSearchQuery = mDatabaseUsersRef.orderByChild("name").startAt("");
+        Log.d("myQuery",mSearchQuery+"");
+        mSearchQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot data :dataSnapshot.getChildren()) {
+                    Log.d("myQuery",data.child("name").getValue()+"");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
+       /* Query usersDbQuery = FirebaseDatabase.getInstance().getReference()
+                .child("users")
+                .orderByChild("name")
+                .equalTo("Anuj");
+
+        usersDbQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot data :dataSnapshot.getChildren()) {
+                    Toast.makeText(MainActivity.this, data.child("name").getValue()+"", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
 
     }
 
@@ -220,6 +283,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+       /* MenuItem searchMenu=menu.findItem(R.id.action_search);
+        SearchView searchView= (SearchView) MenuItemCompat.getActionView(searchMenu);
+        searchView.setOnQueryTextListener(this);*/
         return true;
     }
 
@@ -231,8 +297,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_add) {
-            startActivity(new Intent(MainActivity.this, PostActivity.class));
+        if (id == R.id.action_search) {
+            startActivity(new Intent(MainActivity.this, SearchActivity.class));
         }
 
         if (mToggle.onOptionsItemSelected(item)) {
@@ -242,17 +308,46 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // ------------- SearchView -------------//
+
+    /* @Override
+     public boolean onQueryTextSubmit(String query) {
+         DatabaseReference usersDb = FirebaseDatabase.getInstance().getReference().child("users");
+         mSearchQuery = usersDb.orderByChild("name").startAt(query).endAt(query+"~");
+         mSearchQuery.addValueEventListener(new ValueEventListener() {
+             @Override
+             public void onDataChange(DataSnapshot dataSnapshot) {
+                 for(DataSnapshot data :dataSnapshot.getChildren()) {
+                     Toast.makeText(MainActivity.this, data.child("name").getValue()+"", Toast.LENGTH_SHORT).show();
+                 }
+             }
+
+             @Override
+             public void onCancelled(DatabaseError databaseError) {
+
+             }
+         });
+         return false;
+     }
+
+     @Override
+     public boolean onQueryTextChange(String newText) {
+
+         return false;
+     }
+ */
+    ////////////////////////////////////////////
     public static class FeedsViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
         TextView tvUserProfileName;
-        ImageView ivUserImage;
+        CircleImageView ivUserImage;
 
         public FeedsViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
 
-            ivUserImage = (ImageView) mView.findViewById(R.id.xivUserImageInFeeds);
+            ivUserImage = (CircleImageView) mView.findViewById(R.id.xivUserImageInFeeds);
             tvUserProfileName = (TextView) mView.findViewById(R.id.xtvUserNameInFeeds);
         }
 
@@ -276,6 +371,7 @@ public class MainActivity extends AppCompatActivity {
                     .load(userImage)
                     .placeholder(R.mipmap.empty_user)
                     .crossFade()
+                    .dontAnimate()
                     .into(ivUserImage);
         }
 

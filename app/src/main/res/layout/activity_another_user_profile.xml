@@ -47,4 +47,12 @@
         android:layout_alignRight="@+id/xivAnotherUserImage"
         android:background="@android:drawable/screen_background_dark_transparent"
         app:srcCompat="@drawable/ic_edit_white_24dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/xrvUserProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/xtvAnotherUserEmail" />
 </RelativeLayout>
