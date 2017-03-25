@@ -36,21 +36,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
+    FloatingActionButton fab;
     private RecyclerView rvMainRecyclerView;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private NavigationView navigationView;
     private TextView navigationUserName, navigationUserEmail;
     private CircleImageView navigationUserImage;
-
     private DatabaseReference mDatabaseRef;
     private DatabaseReference mDatabaseUsersRef;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
-    //private Query mSearchQuery;
-
-    private String TAG = "Holla";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,7 +69,25 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.mainDrawerLayout);
         navigationView = (NavigationView) findViewById(R.id.mainNavigationView);
-        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                fab.setAlpha(1 - slideOffset);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                fab.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                fab.setVisibility(View.VISIBLE);
+            }
+        };
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -168,44 +184,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-       /* ///---------- checking firebase query
-
-        mSearchQuery = mDatabaseUsersRef.orderByChild("name").startAt("");
-        Log.d("myQuery",mSearchQuery+"");
-        mSearchQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot data :dataSnapshot.getChildren()) {
-                    Log.d("myQuery",data.child("name").getValue()+"");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-       /* Query usersDbQuery = FirebaseDatabase.getInstance().getReference()
-                .child("users")
-                .orderByChild("name")
-                .equalTo("Anuj");
-
-        usersDbQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot data :dataSnapshot.getChildren()) {
-                    Toast.makeText(MainActivity.this, data.child("name").getValue()+"", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
     }
 
     @Override
@@ -219,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 mDatabaseRef
         ) {
             @Override
-            protected void populateViewHolder(final FeedsViewHolder viewHolder, Feed model, int position) {
+            protected void populateViewHolder(final FeedsViewHolder viewHolder, final Feed model, int position) {
 
                 final String feedU_id = model.getU_id();
                 DatabaseReference dbUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(feedU_id);
@@ -263,6 +241,15 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+
+                viewHolder.ivImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, ImageViewActivity.class);
+                        intent.putExtra("image_uri", model.getImage());
+                        startActivity(intent);
+                    }
+                });
             }
         };
 
@@ -283,9 +270,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-       /* MenuItem searchMenu=menu.findItem(R.id.action_search);
-        SearchView searchView= (SearchView) MenuItemCompat.getActionView(searchMenu);
-        searchView.setOnQueryTextListener(this);*/
         return true;
     }
 
@@ -308,40 +292,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // ------------- SearchView -------------//
-
-    /* @Override
-     public boolean onQueryTextSubmit(String query) {
-         DatabaseReference usersDb = FirebaseDatabase.getInstance().getReference().child("users");
-         mSearchQuery = usersDb.orderByChild("name").startAt(query).endAt(query+"~");
-         mSearchQuery.addValueEventListener(new ValueEventListener() {
-             @Override
-             public void onDataChange(DataSnapshot dataSnapshot) {
-                 for(DataSnapshot data :dataSnapshot.getChildren()) {
-                     Toast.makeText(MainActivity.this, data.child("name").getValue()+"", Toast.LENGTH_SHORT).show();
-                 }
-             }
-
-             @Override
-             public void onCancelled(DatabaseError databaseError) {
-
-             }
-         });
-         return false;
-     }
-
-     @Override
-     public boolean onQueryTextChange(String newText) {
-
-         return false;
-     }
- */
-    ////////////////////////////////////////////
     public static class FeedsViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
         TextView tvUserProfileName;
         CircleImageView ivUserImage;
+        ImageView ivImage;
 
         public FeedsViewHolder(View itemView) {
             super(itemView);
@@ -349,6 +305,7 @@ public class MainActivity extends AppCompatActivity {
 
             ivUserImage = (CircleImageView) mView.findViewById(R.id.xivUserImageInFeeds);
             tvUserProfileName = (TextView) mView.findViewById(R.id.xtvUserNameInFeeds);
+            ivImage = (ImageView) mView.findViewById(R.id.xivImage);
         }
 
         public void setTitle(String title) {
@@ -362,7 +319,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void setImage(Context context, String image) {
-            ImageView ivImage = (ImageView) mView.findViewById(R.id.xivImage);
             Glide.with(context).load(image).into(ivImage);
         }
 

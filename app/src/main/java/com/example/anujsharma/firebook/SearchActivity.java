@@ -1,6 +1,7 @@
 package com.example.anujsharma.firebook;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -61,10 +62,19 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
         ) {
             @Override
-            protected void populateViewHolder(SearchViewHolder viewHolder, SearchUser model, int position) {
+            protected void populateViewHolder(SearchViewHolder viewHolder, final SearchUser model, int position) {
                 viewHolder.setSearchUserName(model.getName());
                 viewHolder.setSearchUserEmail(model.getEmail());
                 viewHolder.setSearchUserImage(getApplicationContext(), model.getProfile_image());
+
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(SearchActivity.this, AnotherUserProfileActivity.class);
+                        intent.putExtra("feed_uid", model.getU_id());
+                        startActivity(intent);
+                    }
+                });
             }
         };
         rvSearch.setAdapter(firebaseRecyclerAdapter);
@@ -118,6 +128,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenu);
         searchView.setIconified(false);
         searchView.setIconifiedByDefault(false);
+        searchView.setQueryHint("Search by name...");
 
         searchView.setOnQueryTextListener(this);
         return super.onCreateOptionsMenu(menu);
@@ -147,6 +158,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             CircleImageView searchUserImage = (CircleImageView) mView.findViewById(R.id.search_userImage);
             Glide.with(context)
                     .load(image)
+                    .placeholder(R.mipmap.empty_user)
+                    .crossFade()
                     .dontAnimate()
                     .into(searchUserImage);
         }

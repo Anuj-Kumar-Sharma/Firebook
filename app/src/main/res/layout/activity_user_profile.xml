@@ -54,7 +54,8 @@
         android:layout_below="@+id/xtvUserProfileName"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:text="abc@xyz.com" />
+        android:text="abc@xyz.com"
+        android:textAlignment="center" />
 
 
 </RelativeLayout>

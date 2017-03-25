@@ -95,7 +95,8 @@ public class PostActivity extends AppCompatActivity {
                     mchildRef.child("desc").setValue(desc);
                     mchildRef.child("u_id").setValue(mUser.getUid());
                     Calendar c = Calendar.getInstance();
-                    String date = c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + (c.get(Calendar.AM_PM) == 1 ? " PM" : " AM") + "   "
+                    int minute = c.get(Calendar.MINUTE);
+                    String date = c.get(Calendar.HOUR) + ":" + (minute < 10 ? "0" + minute : minute) + (c.get(Calendar.AM_PM) == 1 ? " PM" : " AM") + "   "
                             + c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
 
                     mchildRef.child("date").setValue(date);

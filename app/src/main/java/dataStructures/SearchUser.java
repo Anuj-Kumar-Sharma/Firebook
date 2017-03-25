@@ -2,15 +2,16 @@ package dataStructures;
 
 public class SearchUser {
 
-    private String email, name, profile_image;
+    private String email, name, profile_image, u_id;
 
     public SearchUser() {
     }
 
-    public SearchUser(String email, String name, String profile_image) {
+    public SearchUser(String email, String name, String profile_image, String u_id) {
         this.email = email;
         this.name = name;
         this.profile_image = profile_image;
+        this.u_id = u_id;
     }
 
     public String getEmail() {
@@ -35,5 +36,13 @@ public class SearchUser {
 
     public void setProfile_image(String profile_image) {
         this.profile_image = profile_image;
+    }
+
+    public String getU_id() {
+        return u_id;
+    }
+
+    public void setU_id(String u_id) {
+        this.u_id = u_id;
     }
 }

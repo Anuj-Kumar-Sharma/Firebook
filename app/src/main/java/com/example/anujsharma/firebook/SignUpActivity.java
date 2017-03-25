@@ -68,7 +68,7 @@ public class SignUpActivity extends AppCompatActivity {
                     DatabaseReference userDbRef = mDatabaseRef.child(user_id);
                     userDbRef.child("name").setValue(name);
                     userDbRef.child("email").setValue(email);
-
+                    userDbRef.child("u_id").setValue(user_id);
                     mProgressDialog.dismiss();
                     Intent intent = new Intent(SignUpActivity.this, UserProfileActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

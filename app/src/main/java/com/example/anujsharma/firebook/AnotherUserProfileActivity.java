@@ -92,6 +92,7 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
                 String email = dataSnapshot.child("email").getValue(String.class);
                 String image = dataSnapshot.child("profile_image").getValue(String.class);
 
+                getSupportActionBar().setTitle(name);
                 tvUserName.setText(name);
                 tvUserEmail.setText(email);
                 Glide.with(getApplicationContext())
