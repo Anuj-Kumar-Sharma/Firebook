@@ -3,7 +3,10 @@ package com.example.anujsharma.firebook;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,12 +35,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
+
 import dataStructures.Feed;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String LIST_STATE_KEY = "recycler_state";
     FloatingActionButton fab;
+    Parcelable mListState;
     private RecyclerView rvMainRecyclerView;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
@@ -45,8 +53,11 @@ public class MainActivity extends AppCompatActivity {
     private CircleImageView navigationUserImage;
     private DatabaseReference mDatabaseRef;
     private DatabaseReference mDatabaseUsersRef;
+    private DatabaseReference mDatabaseLikesRef;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private LinearLayoutManager layoutManager;
+    private boolean mProcessLike = false;
 
 
     @Override
@@ -98,11 +109,14 @@ public class MainActivity extends AppCompatActivity {
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("feeds");
         mDatabaseUsersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabaseLikesRef = FirebaseDatabase.getInstance().getReference().child("likes");
         mDatabaseRef.keepSynced(true);
         mDatabaseUsersRef.keepSynced(true);
+        mDatabaseLikesRef.keepSynced(true);
 
         rvMainRecyclerView = (RecyclerView) findViewById(R.id.xrvMainRecyclerView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
+        layoutManager = new LinearLayoutManager(this);
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         rvMainRecyclerView.setLayoutManager(layoutManager);
@@ -187,6 +201,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+
+        mListState = layoutManager.onSaveInstanceState();
+        outState.putParcelable(LIST_STATE_KEY, mListState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
+
+        if (savedInstanceState != null)
+            mListState = savedInstanceState.getParcelable(LIST_STATE_KEY);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         FirebaseRecyclerAdapter<Feed, FeedsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Feed, FeedsViewHolder>(
@@ -200,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
             protected void populateViewHolder(final FeedsViewHolder viewHolder, final Feed model, int position) {
 
                 final String feedU_id = model.getU_id();
+                final String feed_key = getRef(position).getKey();
                 DatabaseReference dbUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(feedU_id);
                 dbUserRef.keepSynced(true);
                 dbUserRef.addValueEventListener(new ValueEventListener() {
@@ -223,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
                 viewHolder.setDesc(model.getDesc());
                 viewHolder.setDate(model.getDate());
                 viewHolder.setImage(getApplicationContext(), model.getImage());
+                viewHolder.setLike(feed_key);
 
                 viewHolder.tvUserProfileName.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -250,12 +282,49 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+
+                viewHolder.ibLike.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        mProcessLike = true;
+                        mDatabaseLikesRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if (mProcessLike) {
+                                    if (dataSnapshot.child(feed_key).hasChild(mAuth.getCurrentUser().getUid())) {
+                                        viewHolder.ibLike.setImageResource(R.drawable.like_grey);
+                                        mDatabaseLikesRef.child(feed_key).child(mAuth.getCurrentUser().getUid()).removeValue();
+                                    } else {
+                                        viewHolder.ibLike.setImageResource(R.drawable.like_orange);
+                                        mDatabaseLikesRef.child(feed_key).child(mAuth.getCurrentUser().getUid()).setValue(getCurrentDateTime());
+                                    }
+                                    mProcessLike = false;
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                });
             }
         };
 
         rvMainRecyclerView.setAdapter(firebaseRecyclerAdapter);
 
         mAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mListState != null) {
+            layoutManager.onRestoreInstanceState(mListState);
+        }
     }
 
     @Override
@@ -292,20 +361,35 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public String getCurrentDateTime() {
+        Calendar c = Calendar.getInstance();
+        int minute = c.get(Calendar.MINUTE);
+        String date = c.get(Calendar.HOUR) + ":" + (minute < 10 ? "0" + minute : minute) + (c.get(Calendar.AM_PM) == 1 ? " PM" : " AM") + "   "
+                + c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
+        return date;
+    }
+
     public static class FeedsViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
         TextView tvUserProfileName;
         CircleImageView ivUserImage;
         ImageView ivImage;
+        ImageButton ibLike;
+        DatabaseReference dbLikesRef;
+        FirebaseAuth mAuth;
 
         public FeedsViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
 
+            dbLikesRef = FirebaseDatabase.getInstance().getReference().child("likes");
+            mAuth = FirebaseAuth.getInstance();
+
             ivUserImage = (CircleImageView) mView.findViewById(R.id.xivUserImageInFeeds);
             tvUserProfileName = (TextView) mView.findViewById(R.id.xtvUserNameInFeeds);
             ivImage = (ImageView) mView.findViewById(R.id.xivImage);
+            ibLike = (ImageButton) mView.findViewById(R.id.xibLike);
         }
 
         public void setTitle(String title) {
@@ -338,6 +422,38 @@ public class MainActivity extends AppCompatActivity {
         public void setDate(String date) {
             TextView tvDate = (TextView) mView.findViewById(R.id.xtvDate);
             tvDate.setText(date);
+        }
+
+        public void setLike(final String post_key) {
+
+            final TextView tvLikesCount = (TextView) mView.findViewById(R.id.tvLikesCount);
+            dbLikesRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot.child(post_key).hasChild(mAuth.getCurrentUser().getUid())) {
+                        ibLike.setImageResource(R.drawable.like_orange);
+                        tvLikesCount.setTextColor(Color.rgb(252, 176, 48));
+                    } else {
+                        tvLikesCount.setTextColor(Color.rgb(127, 127, 127));
+                        ibLike.setImageResource(R.drawable.like_grey);
+                    }
+                    long likesCount = dataSnapshot.child(post_key).getChildrenCount();
+                    if (likesCount == 0) {
+                        tvLikesCount.setVisibility(View.GONE);
+                    } else {
+                        tvLikesCount.setText(likesCount + "");
+                        tvLikesCount.setVisibility(View.VISIBLE);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
         }
     }
 }

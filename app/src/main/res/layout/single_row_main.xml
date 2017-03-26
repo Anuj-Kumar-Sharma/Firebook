@@ -43,7 +43,7 @@
 
                 <TextView
                     android:id="@+id/xtvDate"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
                     android:text="Date"
@@ -70,29 +70,70 @@
             android:adjustViewBounds="true"
             android:src="@mipmap/add_btn" />
 
-
-        <TextView
-            android:id="@+id/xtvTitle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="15dp"
-            android:text="Title goes here"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/xtvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="15dp"
+                    android:text="Title goes here"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
 
 
-        <TextView
-            android:id="@+id/xtvDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="5dp"
-            android:text="Description goes here"
-            android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/xtvDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="5dp"
+                    android:text="Description goes here"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:id="@+id/xibLike"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@android:drawable/screen_background_light_transparent"
+                    android:padding="5dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/like_grey" />
+
+                <TextView
+                    android:id="@+id/tvLikesCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/xibLike"
+                    android:layout_toStartOf="@+id/xibLike"
+                    android:text="0"
+                    android:textColor="@color/colorPrimaryDark" />
+            </RelativeLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
