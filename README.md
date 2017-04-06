@@ -1,5 +1,5 @@
 # Firebook
-Firebook is a social media app. It uses Firebase as backe-end database storage.
+Firebook is a social media app. It uses Firebase as back-end database storage.
 <h3>Features</h3>
 With this app, you can:
 <ul>
