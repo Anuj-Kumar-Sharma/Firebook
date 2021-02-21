@@ -7,4 +7,5 @@ With this app, you can:
   <li>Search your friends</li>
   <li>Post your photos</li>
   <li>Like your friend's photos</li>
+  <li>Share your friends</li>
 </ul>  
